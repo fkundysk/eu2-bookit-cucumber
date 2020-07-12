@@ -1,5 +1,6 @@
 package com.bookit.step_definitions;
 
+import com.bookit.pages.SelfPage;
 import com.bookit.utilities.BookItApiUtils;
 import com.bookit.utilities.ConfigurationReader;
 import com.bookit.utilities.DBUtils;
@@ -89,7 +90,56 @@ public class ApiStepDefs {
 
     @Then("UI,API and Database user information must be match")
     public void ui_API_and_Database_user_information_must_be_match() {
+        //API-DB
 
+        //GET INFORMATION FROM DATABASE
+        String query ="select id,firstname,lastname,role\n" +
+                "from users\n" +
+                "where email = '"+emailGlobal+"';";
+
+        Map<String, Object> rowMap = DBUtils.getRowMap(query);
+        System.out.println("rowMap = " + rowMap);
+
+        //save data from database
+        long expectedId = (long) rowMap.get("id");
+        String expectedFirstname = (String) rowMap.get("firstname");
+        String expectedLastname = (String) rowMap.get("lastname");
+        String expectedRole = (String) rowMap.get("role");
+
+        //GET INFORMATION FROM API
+
+        JsonPath jsonPath = response.jsonPath();
+
+        long actualId = jsonPath.getLong("id");
+        String actualFirstname = jsonPath.getString("firstName");
+        String actualLastname = jsonPath.getString("lastName");
+        String actualRole = jsonPath.getString("role");
+
+        //assert database against to api
+
+        Assert.assertEquals(expectedId,actualId);
+        Assert.assertEquals(expectedFirstname,actualFirstname);
+        Assert.assertEquals(expectedLastname,actualLastname);
+        Assert.assertEquals(expectedRole,actualRole);
+
+        //GET INFORMATION FROM THE UI
+
+        SelfPage selfPage = new SelfPage();
+        String actualFullnameUI = selfPage.name.getText();
+        String actualRoleUI = selfPage.role.getText();
+
+        //verify db vs ui
+        String expectedFullname = expectedFirstname+" "+expectedLastname;
+
+        Assert.assertEquals(expectedFullname,actualFullnameUI);
+        Assert.assertEquals(expectedRole,actualRoleUI);
+
+        // API VS UI
+        //Create fullname from api
+        String actualFullname = actualFirstname+" "+actualLastname;
+
+        Assert.assertEquals(actualFullnameUI,actualFullname);
+        Assert.assertEquals(actualRoleUI,actualRole);
 
 
     }
