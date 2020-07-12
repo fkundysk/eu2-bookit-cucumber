@@ -1,15 +1,22 @@
 package com.bookit.step_definitions;
 
+import com.bookit.utilities.BookItApiUtils;
+import com.bookit.utilities.ConfigurationReader;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.response.Response;
+
+import static io.restassured.RestAssured.*;
 
 public class ApiStepDefs {
 
     @Given("I logged Bookit api using {string} and {string}")
-    public void i_logged_Bookit_api_using_and(String string, String string2) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new cucumber.api.PendingException();
+    public void i_logged_Bookit_api_using_and(String email, String password) {
+
+        String token = BookItApiUtils.generateToken(email,password);
+        System.out.println("token = " + token);
+
     }
 
     @When("I get the current user information from api")
