@@ -16,7 +16,7 @@ import java.util.Map;
 import static io.restassured.RestAssured.*;
 
 public class ApiStepDefs {
-        String token;
+    String token;
     Response response;
     String emailGlobal;
 
