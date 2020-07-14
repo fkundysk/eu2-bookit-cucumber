@@ -36,8 +36,6 @@ public class ApiStepDefs {
         response = given().header("Authorization", token)
                 .when().get(url);
 
-
-
     }
 
     @Then("status code should be {int}")
